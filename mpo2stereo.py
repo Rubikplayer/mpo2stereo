@@ -3,7 +3,10 @@
 from __future__ import print_function
 from optparse import OptionParser
 from PIL import Image
-from StringIO import StringIO
+try:
+    from StringIO import IOHandler
+except ImportError:
+    from io import BytesIO as IOHandler
 import errno, glob, os, sys
 
 
@@ -25,7 +28,7 @@ def split_mpo(filename):
         idx = data.find(b'\xFF\xD8\xFF\xE1', 1)
         
         if idx > 0:
-            return Image.open(StringIO(data[: idx])), Image.open(StringIO(data[idx :]))
+            return Image.open(IOHandler(data[: idx])), Image.open(IOHandler(data[idx :]))
         else:
             raise MPOError(filename)
 
